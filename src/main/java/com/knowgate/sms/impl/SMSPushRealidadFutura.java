@@ -1,4 +1,4 @@
-package com.knowgate.sms;
+package com.knowgate.sms.impl;
 
 /**
  * © Copyright 2016 the original author.
@@ -30,6 +30,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
 import com.knowgate.sms.SMSPush;
+import com.knowgate.sms.SMSMessage;
+import com.knowgate.sms.SMSResponse;
 
 public final class SMSPushRealidadFutura extends SMSPush {
 

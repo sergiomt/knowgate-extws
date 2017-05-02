@@ -1,4 +1,4 @@
-package com.knowgate.sms;
+package com.knowgate.sms.impl;
 
 /**
  * © Copyright 2016 the original author.
@@ -11,8 +11,6 @@ package com.knowgate.sms;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.
  */
-
-import com.knowgate.sms.SMSPush;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +29,8 @@ import java.util.Date;
 import java.util.Properties;
 
 import com.knowgate.sms.SMSPush;
+import com.knowgate.sms.SMSMessage;
+import com.knowgate.sms.SMSResponse;
 
 /**
  * <p>Implementation for sending SMS messages with Altiria platform</p>

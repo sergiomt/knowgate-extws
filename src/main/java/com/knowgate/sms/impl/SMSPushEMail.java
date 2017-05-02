@@ -1,4 +1,4 @@
-package com.knowgate.sms;
+package com.knowgate.sms.impl;
 
 /**
  * © Copyright 2016 the original author.
@@ -25,6 +25,8 @@ import java.util.Properties;
 import com.oreilly.servlet.MailMessage;
 
 import com.knowgate.sms.SMSPush;
+import com.knowgate.sms.SMSMessage;
+import com.knowgate.sms.SMSResponse;
 
 public class SMSPushEMail extends SMSPush {
 
