@@ -34,10 +34,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.ParserAdapter;
 import org.xml.sax.helpers.ParserFactory;
 
-import com.knowgate.stringutils.Str;
-import com.knowgate.debug.DebugFile;
-import com.knowgate.debug.StackTraceUtil;
-
 import com.knowgate.http.HttpRequest;
 
 /**
@@ -61,8 +57,6 @@ public class Show extends DefaultHandler {
   	oChars = new StringBuffer();
   	
   	bWrittingUser = false;
-  	
-    if (DebugFile.trace) DebugFile.writeln("Begin Show("+sId+")");
     
     HttpRequest oReq = new HttpRequest("http://api.twitter.com/1/statuses/show/"+sId+".xml");
 
@@ -88,16 +82,8 @@ public class Show extends DefaultHandler {
       oInStm.close();
 	  
     } catch (Exception e) {
-      try {
-        if (DebugFile.trace) {
-          if (oReq.responseCode()==HttpURLConnection.HTTP_BAD_REQUEST)
-            DebugFile.writeln(Str.substrBetween(oReq.src(),"<error>","</error>"));
-          DebugFile.writeln(e.getClass().getName()+" "+e.getMessage()+"\n"+StackTraceUtil.getStackTrace(e));
-        } // fi (trace)
-      } catch (Exception ignore) {}
       throw new IOException(e.getMessage(),e);
     }
-    if (DebugFile.trace) DebugFile.writeln("End Show()");  	
   }
 
   public Show(long lId)
