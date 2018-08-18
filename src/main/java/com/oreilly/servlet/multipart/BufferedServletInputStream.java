@@ -6,6 +6,7 @@ package com.oreilly.servlet.multipart;
 
 import java.io.IOException;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
 /**
@@ -33,16 +34,21 @@ public class BufferedServletInputStream extends ServletInputStream {
   
   /** input stream we are filtering */
   private ServletInputStream in;
-  
+
   /** our buffer */
   private byte[] buf = new byte[64*1024];  // 64k
-  
+
   /** number of bytes we've read into the buffer */
   private int count; 
-  
+
   /** current position in the buffer */
   private int pos;
-  
+
+  /** whether the end of stream has been reached */
+  private boolean finished;
+
+  private ReadListener listener;
+
   /**
    * Creates a <code>BufferedServletInputStream</code> that wraps the provided 
    * <code>ServletInputStream</code>.
@@ -51,6 +57,7 @@ public class BufferedServletInputStream extends ServletInputStream {
    */
   public BufferedServletInputStream(ServletInputStream in) {
     this.in = in;
+    this.finished = false;
   }
 
   /**
@@ -155,7 +162,9 @@ public class BufferedServletInputStream extends ServletInputStream {
     if (count <= pos) {
       fill();
       if (count <= pos) {
-        return -1;
+        if (listener!=null)
+        	listener.onAllDataRead();
+    	return -1;
       }
     }
     return buf[pos++] & 0xff;
@@ -182,6 +191,7 @@ public class BufferedServletInputStream extends ServletInputStream {
         fill();
         avail = count - pos;
         if(avail <= 0) {
+        	finished = true;
           if (total > 0)
             return total;
           else
@@ -195,4 +205,19 @@ public class BufferedServletInputStream extends ServletInputStream {
     }
     return total;
   }
+
+	@Override
+	public boolean isFinished() {
+		return finished;
+	}
+
+	@Override
+	public boolean isReady() {
+		return !finished;
+	}
+
+	@Override
+	public void setReadListener(ReadListener listener) {
+		this.listener = listener;
+	}
 }

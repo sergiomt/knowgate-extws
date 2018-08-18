@@ -767,6 +767,21 @@ public class MultipartRequest implements HttpServletRequest {
 	  public AsyncContext startAsync(ServletRequest request, ServletResponse response ) { return null; }
 
 	  public DispatcherType getDispatcherType() { return null; }
+
+	@Override
+	public long getContentLengthLong() {
+		return (long) getContentLength();
+	}
+
+	@Override
+	public String changeSessionId() {
+	    throw new RuntimeException("HttpServletRequest.changeSessionId() method not implemented for MultipartRequest");
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> arg0) throws IOException, ServletException {
+	    throw new RuntimeException("HttpServletRequest.upgrade() method not implemented for MultipartRequest");
+	}
 }
 
 

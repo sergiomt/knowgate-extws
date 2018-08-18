@@ -6,6 +6,7 @@ package com.oreilly.servlet.multipart;
 
 import java.io.IOException;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
 /**
@@ -23,13 +24,18 @@ public class LimitedServletInputStream extends ServletInputStream {
   
   /** input stream we are filtering */
   private ServletInputStream in;
-  
+
   /** number of bytes to read before giving up */
   private int totalExpected;
-  
+
   /** number of bytes we have currently read */
   private int totalRead = 0;
-  
+
+  /** whether the end of stream has been reached */
+  private boolean finished;
+
+  private ReadListener listener;
+
   /**
    * Creates a <code>LimitedServletInputStream</code> with the specified
    * length limit that wraps the provided <code>ServletInputStream</code>.
@@ -75,6 +81,9 @@ public class LimitedServletInputStream extends ServletInputStream {
    */
   public int read() throws IOException {
     if (totalRead >= totalExpected) {
+      finished = true;
+      if (listener!=null)
+        listener.onAllDataRead();
       return -1;
     }
 
@@ -99,6 +108,9 @@ public class LimitedServletInputStream extends ServletInputStream {
   public int read( byte b[], int off, int len ) throws IOException {
     int result, left = totalExpected - totalRead;
     if (left <= 0) {
+      finished = true;
+      if (listener!=null)
+        listener.onAllDataRead();
       return -1;
     } else {
       result = in.read(b, off, Math.min(left, len));
@@ -106,6 +118,23 @@ public class LimitedServletInputStream extends ServletInputStream {
     if (result > 0) {
       totalRead += result;
     }
-    return result;    
+    return result;
   }
+
+	@Override
+	public boolean isFinished() {
+		return finished;
+	}
+
+	@Override
+	public boolean isReady() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setReadListener(ReadListener listener) {
+		this.listener = listener;
+
+	}
 }
